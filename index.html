@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>CuanPeople</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{
+  --bg:#0a0a0a;--bg2:#141414;--bg3:#1c1c1c;--bg4:#242424;
+  --border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.13);
+  --text:#efefef;--text2:#888;--text3:#444;
+  --green:#00c896;--green-dim:rgba(0,200,150,0.12);
+  --red:#ff5c5c;--red-dim:rgba(255,92,92,0.12);
+  --amber:#f0a500;--amber-dim:rgba(240,165,0,0.12);
+  --blue:#4d9de0;--r:10px;--r2:14px;
+  --font:'Plus Jakarta Sans',sans-serif;--mono:'DM Mono',monospace;
+}
+body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh;font-size:14px;overscroll-behavior:none}
+.app{max-width:430px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column}
+
+/* HEADER */
+.hdr{display:flex;align-items:center;justify-content:space-between;padding:14px 16px 10px;position:sticky;top:0;z-index:20;background:var(--bg);border-bottom:0.5px solid var(--border)}
+.hdr-logo{display:flex;align-items:center;gap:8px}
+.hdr-dot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green)}
+.hdr-name{font-size:15px;font-weight:700;letter-spacing:0.03em}
+.hdr-right{display:flex;align-items:center;gap:8px}
+.hdr-time{font-family:var(--mono);font-size:12px;color:var(--text2)}
+.hdr-add{width:32px;height:32px;border-radius:50%;background:var(--green);border:none;color:#000;font-size:22px;font-weight:300;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1}
+
+/* IHSG BAR */
+.ihsg-bar{display:flex;gap:8px;overflow-x:auto;padding:8px 16px;border-bottom:0.5px solid var(--border);scrollbar-width:none}
+.ihsg-bar::-webkit-scrollbar{display:none}
+.ihsg-chip{flex-shrink:0;background:var(--bg3);border:0.5px solid var(--border);border-radius:20px;padding:5px 12px;font-family:var(--mono);font-size:11px;color:var(--text2);white-space:nowrap;cursor:pointer}
+.ihsg-chip span{color:var(--text);font-weight:500}
+.ihsg-chip .chg.up{color:var(--green)}
+.ihsg-chip .chg.down{color:var(--red)}
+
+/* CONTENT */
+.content{flex:1;padding:12px 16px 100px;overflow-y:auto}
+.panel{display:none}.panel.active{display:block}
+
+/* EMPTY */
+.empty{text-align:center;padding:60px 20px;color:var(--text3)}
+.empty-icon{font-size:40px;margin-bottom:12px}
+.empty p{font-size:13px;line-height:1.7;color:var(--text2)}
+.empty-hint{margin-top:20px;font-size:12px;color:var(--text3);border:0.5px dashed var(--border2);border-radius:var(--r);padding:12px;line-height:1.8}
+
+/* SAHAM CARD */
+.saham-card{background:var(--bg2);border:0.5px solid var(--border);border-radius:var(--r2);margin-bottom:10px;overflow:hidden}
+.saham-card.zona-beli{border-left:2.5px solid var(--green)}
+.saham-card.zona-jual{border-left:2.5px solid var(--red)}
+.saham-card.waspadai{border-left:2.5px solid var(--amber)}
+.saham-card.netral{border-left:2.5px solid var(--text3)}
+
+.card-top{display:flex;align-items:center;justify-content:space-between;padding:13px 14px 11px;cursor:pointer}
+.card-ticker{font-family:var(--mono);font-size:17px;font-weight:500;letter-spacing:0.03em}
+.card-name{font-size:11px;color:var(--text2);margin-top:2px}
+.card-right{display:flex;flex-direction:column;align-items:flex-end;gap:5px}
+
+.status-pill{font-size:10px;font-weight:600;letter-spacing:0.07em;padding:3px 9px;border-radius:20px}
+.status-pill.zona-beli{background:var(--green-dim);color:var(--green)}
+.status-pill.zona-jual{background:var(--red-dim);color:var(--red)}
+.status-pill.waspadai{background:var(--amber-dim);color:var(--amber)}
+.status-pill.netral{background:var(--bg4);color:var(--text2)}
+.card-chevron{font-size:11px;color:var(--text3);transition:transform 0.2s;display:inline-block}
+.card-chevron.open{transform:rotate(180deg)}
+
+/* AREA GRID */
+.area-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);border-top:0.5px solid var(--border)}
+.area-cell{background:var(--bg2);padding:10px 14px}
+.area-label{font-size:9px;color:var(--text3);letter-spacing:0.1em;margin-bottom:3px}
+.area-val{font-family:var(--mono);font-size:13px;font-weight:500}
+.area-val.green{color:var(--green)}.area-val.red{color:var(--red)}.area-val.amber{color:var(--amber)}.area-val.muted{color:var(--text2)}
+
+/* HISTORY */
+.history-wrap{padding:10px 14px;border-top:0.5px solid var(--border);background:var(--bg2)}
+.history-label{font-size:9px;color:var(--text3);letter-spacing:0.1em;margin-bottom:8px}
+.history-list{display:flex;flex-direction:column;gap:7px}
+.history-item{display:flex;align-items:flex-start;gap:8px;font-size:12px}
+.h-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;margin-top:4px}
+.h-dot.mantul{background:var(--green)}.h-dot.reject{background:var(--red)}.h-dot.note{background:var(--amber)}
+.h-content{flex:1;color:var(--text2);line-height:1.5}
+.h-content strong{color:var(--text);font-weight:500}
+.h-time{font-size:10px;color:var(--text3);white-space:nowrap;padding-left:8px}
+
+/* QUICK NOTE */
+.quick-note-wrap{padding:10px 14px 12px;border-top:0.5px solid var(--border);background:var(--bg3)}
+.qn-types{display:flex;gap:6px;margin-bottom:8px}
+.qn-type-btn{font-size:11px;padding:4px 10px;border-radius:20px;border:0.5px solid var(--border2);background:transparent;color:var(--text2);cursor:pointer;font-family:var(--font);transition:all 0.1s}
+.qn-type-btn.active.mantul{background:var(--green-dim);color:var(--green);border-color:var(--green)}
+.qn-type-btn.active.reject{background:var(--red-dim);color:var(--red);border-color:var(--red)}
+.qn-type-btn.active.note{background:var(--amber-dim);color:var(--amber);border-color:var(--amber)}
+.qn-row{display:flex;gap:8px;align-items:flex-end}
+.qn-row textarea{flex:1;background:var(--bg4);border:0.5px solid var(--border2);color:var(--text);font-family:var(--font);font-size:12px;padding:8px 10px;border-radius:var(--r);outline:none;resize:none;min-height:38px;max-height:80px;line-height:1.5}
+.qn-row textarea:focus{border-color:var(--green)}
+.btn-send{width:38px;height:38px;border-radius:var(--r);background:var(--green);border:none;color:#000;font-size:18px;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-weight:500}
+
+/* CARD ACTIONS */
+.card-actions{display:flex;border-top:0.5px solid var(--border)}
+.card-action-btn{flex:1;padding:10px;background:transparent;border:none;border-right:0.5px solid var(--border);color:var(--text2);font-family:var(--font);font-size:11px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:5px;transition:background 0.1s}
+.card-action-btn:last-child{border-right:none}
+.card-action-btn:hover{background:var(--bg3);color:var(--text)}
+.card-action-btn.danger:hover{color:var(--red);background:var(--red-dim)}
+
+/* BOTTOM NAV */
+.bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;display:flex;background:var(--bg);border-top:0.5px solid var(--border);z-index:20;padding-bottom:env(safe-area-inset-bottom)}
+.bnav-btn{flex:1;padding:12px 4px 10px;background:transparent;border:none;color:var(--text3);font-family:var(--font);font-size:10px;font-weight:500;letter-spacing:0.05em;cursor:pointer;transition:color 0.15s;display:flex;flex-direction:column;align-items:center;gap:4px}
+.bnav-icon{font-size:20px;line-height:1}
+.bnav-btn.active{color:var(--green)}
+
+/* OVERLAY / SHEET */
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:50;align-items:flex-end;justify-content:center}
+.overlay.show{display:flex}
+.sheet{background:var(--bg2);border-radius:20px 20px 0 0;border-top:0.5px solid var(--border2);width:100%;max-width:430px;max-height:92vh;overflow-y:auto;padding:0 0 40px;animation:slideUp 0.25s ease}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.sheet-handle{width:36px;height:4px;border-radius:2px;background:var(--border2);margin:12px auto 16px}
+.sheet-title{font-size:15px;font-weight:600;padding:0 20px 16px;border-bottom:0.5px solid var(--border);margin-bottom:16px}
+.sheet-body{padding:0 20px}
+
+/* FORM */
+.f-label{font-size:10px;color:var(--text3);letter-spacing:0.1em;margin-bottom:5px}
+.f-group{margin-bottom:14px}
+.f-row{display:flex;gap:8px}.f-row .f-group{flex:1}
+input,select,textarea{width:100%;background:var(--bg3);border:0.5px solid var(--border2);color:var(--text);font-family:var(--font);font-size:13px;padding:10px 12px;border-radius:var(--r);outline:none;appearance:none}
+input:focus,select:focus,textarea:focus{border-color:var(--green)}
+textarea{resize:none;min-height:70px;line-height:1.5}
+select option{background:var(--bg3)}
+.btn-full{width:100%;padding:13px;background:var(--green);border:none;color:#000;font-family:var(--font);font-size:14px;font-weight:700;border-radius:var(--r);cursor:pointer;margin-top:4px}
+.btn-cancel{width:100%;padding:11px;background:transparent;border:0.5px solid var(--border2);color:var(--text2);font-family:var(--font);font-size:13px;border-radius:var(--r);cursor:pointer;margin-top:8px}
+
+/* NOTES PANEL */
+.note-entry{padding:12px 0;border-bottom:0.5px solid var(--border)}
+.note-entry:last-child{border-bottom:none}
+.note-meta{display:flex;align-items:center;gap:6px;margin-bottom:6px;flex-wrap:wrap}
+.note-ticker-tag{font-size:10px;font-weight:600;font-family:var(--mono);padding:2px 8px;border-radius:20px;background:var(--bg4);color:var(--text2)}
+.note-type-tag{font-size:10px;padding:2px 7px;border-radius:20px;font-weight:500}
+.note-type-tag.mantul{background:var(--green-dim);color:var(--green)}
+.note-type-tag.reject{background:var(--red-dim);color:var(--red)}
+.note-type-tag.note{background:var(--amber-dim);color:var(--amber)}
+.note-ts{font-size:10px;color:var(--text3);margin-left:auto}
+.note-price-tag{font-family:var(--mono);font-size:11px;color:var(--text2)}
+.note-text{font-size:13px;color:var(--text2);line-height:1.6}
+.note-del{font-size:11px;color:var(--text3);cursor:pointer;margin-top:6px;display:inline-block}
+
+/* TOAST */
+.toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:var(--bg4);border:0.5px solid var(--border2);color:var(--text);font-size:12px;padding:8px 16px;border-radius:20px;z-index:200;opacity:0;transition:opacity 0.2s;pointer-events:none;white-space:nowrap}
+.toast.show{opacity:1}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <div class="hdr">
+    <div class="hdr-logo">
+      <div class="hdr-dot"></div>
+      <div class="hdr-name">CuanPeople</div>
+    </div>
+    <div class="hdr-right">
+      <div class="hdr-time" id="clock">--:--</div>
+      <button class="hdr-add" onclick="openAdd()" aria-label="Tambah saham">+</button>
+    </div>
+  </div>
+
+  <div class="ihsg-bar">
+    <div class="ihsg-chip" onclick="editIHSG()">IHSG <span id="ihsg-val">—</span> <span class="chg" id="ihsg-chg"></span></div>
+    <div class="ihsg-chip" id="sesi-chip">Sesi: <span id="sesi-val">—</span></div>
+    <div class="ihsg-chip" onclick="addMarketNote()">📝 Market note</div>
+  </div>
+
+  <div class="content">
+    <div class="panel active" id="panel-watchlist">
+      <div id="wl-list"></div>
+    </div>
+    <div class="panel" id="panel-notes">
+      <div id="notes-list"></div>
+    </div>
+  </div>
+
+  <div class="bottom-nav">
+    <button class="bnav-btn active" onclick="switchPanel('watchlist',this)">
+      <span class="bnav-icon">👁</span>Watchlist
+    </button>
+    <button class="bnav-btn" onclick="switchPanel('notes',this)">
+      <span class="bnav-icon">📝</span>Semua Catatan
+    </button>
+  </div>
+</div>
+
+<!-- TAMBAH SAHAM -->
+<div class="overlay" id="overlay-add" onclick="bgClose(event,'overlay-add')">
+  <div class="sheet">
+    <div class="sheet-handle"></div>
+    <div class="sheet-title">Tambah Saham</div>
+    <div class="sheet-body">
+      <div class="f-row">
+        <div class="f-group">
+          <div class="f-label">TICKER</div>
+          <input id="f-ticker" placeholder="BBRI" maxlength="6" style="text-transform:uppercase;font-family:var(--mono);font-size:16px;font-weight:500">
+        </div>
+        <div class="f-group">
+          <div class="f-label">STATUS</div>
+          <select id="f-status">
+            <option value="zona-beli">🟢 Zona Beli</option>
+            <option value="zona-jual">🔴 Zona Jual</option>
+            <option value="waspadai">🟡 Waspadai</option>
+            <option value="netral" selected>⚪ Netral</option>
+          </select>
+        </div>
+      </div>
+      <div class="f-group">
+        <div class="f-label">NAMA (opsional)</div>
+        <input id="f-name" placeholder="Bank Rakyat Indonesia">
+      </div>
+      <div class="f-row">
+        <div class="f-group">
+          <div class="f-label">AREA BELI</div>
+          <input id="f-beli" placeholder="4.100 – 4.180">
+        </div>
+        <div class="f-group">
+          <div class="f-label">AREA JUAL / TP</div>
+          <input id="f-jual" placeholder="4.450 – 4.500">
+        </div>
+      </div>
+      <div class="f-row">
+        <div class="f-group">
+          <div class="f-label">SUPPORT</div>
+          <input id="f-support" placeholder="3.980">
+        </div>
+        <div class="f-group">
+          <div class="f-label">RESISTANCE</div>
+          <input id="f-resist" placeholder="4.600">
+        </div>
+      </div>
+      <div class="f-group">
+        <div class="f-label">CATATAN AWAL (opsional)</div>
+        <textarea id="f-note" placeholder="Contoh: selalu mantul kuat di 4.100, reject di 4.500 beberapa kali sebelumnya..."></textarea>
+      </div>
+      <button class="btn-full" onclick="saveSaham()">Simpan</button>
+      <button class="btn-cancel" onclick="closeOverlay('overlay-add')">Batal</button>
+    </div>
+  </div>
+</div>
+
+<!-- EDIT SAHAM -->
+<div class="overlay" id="overlay-edit" onclick="bgClose(event,'overlay-edit')">
+  <div class="sheet">
+    <div class="sheet-handle"></div>
+    <div class="sheet-title" id="edit-title">Edit Saham</div>
+    <div class="sheet-body">
+      <input type="hidden" id="edit-id">
+      <div class="f-row">
+        <div class="f-group">
+          <div class="f-label">TICKER</div>
+          <input id="ef-ticker" maxlength="6" style="text-transform:uppercase;font-family:var(--mono);font-size:16px;font-weight:500">
+        </div>
+        <div class="f-group">
+          <div class="f-label">STATUS</div>
+          <select id="ef-status">
+            <option value="zona-beli">🟢 Zona Beli</option>
+            <option value="zona-jual">🔴 Zona Jual</option>
+            <option value="waspadai">🟡 Waspadai</option>
+            <option value="netral">⚪ Netral</option>
+          </select>
+        </div>
+      </div>
+      <div class="f-group">
+        <div class="f-label">NAMA</div>
+        <input id="ef-name" placeholder="Nama perusahaan">
+      </div>
+      <div class="f-row">
+        <div class="f-group"><div class="f-label">AREA BELI</div><input id="ef-beli"></div>
+        <div class="f-group"><div class="f-label">AREA JUAL / TP</div><input id="ef-jual"></div>
+      </div>
+      <div class="f-row">
+        <div class="f-group"><div class="f-label">SUPPORT</div><input id="ef-support"></div>
+        <div class="f-group"><div class="f-label">RESISTANCE</div><input id="ef-resist"></div>
+      </div>
+      <button class="btn-full" onclick="updateSaham()">Update</button>
+      <button class="btn-cancel" onclick="closeOverlay('overlay-edit')">Batal</button>
+    </div>
+  </div>
+</div>
+
+<!-- IHSG -->
+<div class="overlay" id="overlay-ihsg" onclick="bgClose(event,'overlay-ihsg')">
+  <div class="sheet">
+    <div class="sheet-handle"></div>
+    <div class="sheet-title">Update IHSG</div>
+    <div class="sheet-body">
+      <div class="f-row">
+        <div class="f-group"><div class="f-label">NILAI</div><input id="ihsg-input" placeholder="7.124"></div>
+        <div class="f-group"><div class="f-label">PERUBAHAN</div><input id="ihsg-chg-input" placeholder="+0.42%"></div>
+      </div>
+      <div class="f-group">
+        <div class="f-label">KONDISI</div>
+        <select id="ihsg-sesi">
+          <option>Pre-market</option>
+          <option>Sesi 1</option>
+          <option>Istirahat</option>
+          <option>Sesi 2</option>
+          <option>After market</option>
+        </select>
+      </div>
+      <button class="btn-full" onclick="saveIHSG()">Update</button>
+      <button class="btn-cancel" onclick="closeOverlay('overlay-ihsg')">Batal</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+let sahamList = JSON.parse(localStorage.getItem('cp_saham') || '[]');
+let notes = JSON.parse(localStorage.getItem('cp_notes') || '[]');
+let ihsg = JSON.parse(localStorage.getItem('cp_ihsg') || '{"val":"","chg":"","sesi":""}');
+let expanded = new Set();
+let qTypes = {};
+
+function persist() {
+  localStorage.setItem('cp_saham', JSON.stringify(sahamList));
+  localStorage.setItem('cp_notes', JSON.stringify(notes));
+  localStorage.setItem('cp_ihsg', JSON.stringify(ihsg));
+}
+
+function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2,5); }
+
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+function fmtTime(iso) {
+  const d = new Date(iso);
+  return d.toLocaleDateString('id-ID',{day:'2-digit',month:'short'}) + ' ' +
+    d.toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'});
+}
+
+// Clock
+function tick() {
+  document.getElementById('clock').textContent = new Date().toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'});
+}
+tick(); setInterval(tick, 15000);
+
+// Panel
+function switchPanel(name, btn) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.bnav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('panel-'+name).classList.add('active');
+  btn.classList.add('active');
+  if (name === 'notes') renderNotes();
+}
+
+// Overlay
+function closeOverlay(id) { document.getElementById(id).classList.remove('show'); }
+function bgClose(e, id) { if (e.target.id === id) closeOverlay(id); }
+
+// Add
+function openAdd() {
+  ['f-ticker','f-name','f-beli','f-jual','f-support','f-resist','f-note'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('f-status').value = 'netral';
+  document.getElementById('overlay-add').classList.add('show');
+}
+
+function saveSaham() {
+  const ticker = document.getElementById('f-ticker').value.toUpperCase().trim();
+  if (!ticker) { toast('Ticker wajib diisi'); return; }
+  const id = uid();
+  const initNote = document.getElementById('f-note').value.trim();
+  sahamList.unshift({ id, ticker, name: document.getElementById('f-name').value.trim(), status: document.getElementById('f-status').value, beli: document.getElementById('f-beli').value.trim(), jual: document.getElementById('f-jual').value.trim(), support: document.getElementById('f-support').value.trim(), resist: document.getElementById('f-resist').value.trim(), createdAt: new Date().toISOString() });
+  if (initNote) notes.unshift({ id: uid(), sahamId: id, ticker, type: 'note', price: '', text: initNote, ts: new Date().toISOString() });
+  persist(); closeOverlay('overlay-add'); toast('✅ ' + ticker + ' ditambahkan'); renderWatchlist();
+}
+
+// Edit
+function openEdit(id) {
+  const s = sahamList.find(x => x.id === id); if (!s) return;
+  document.getElementById('edit-id').value = s.id;
+  document.getElementById('edit-title').textContent = 'Edit ' + s.ticker;
+  document.getElementById('ef-ticker').value = s.ticker;
+  document.getElementById('ef-name').value = s.name || '';
+  document.getElementById('ef-status').value = s.status;
+  document.getElementById('ef-beli').value = s.beli || '';
+  document.getElementById('ef-jual').value = s.jual || '';
+  document.getElementById('ef-support').value = s.support || '';
+  document.getElementById('ef-resist').value = s.resist || '';
+  document.getElementById('overlay-edit').classList.add('show');
+}
+
+function updateSaham() {
+  const id = document.getElementById('edit-id').value;
+  const idx = sahamList.findIndex(x => x.id === id); if (idx < 0) return;
+  const s = sahamList[idx];
+  s.ticker = document.getElementById('ef-ticker').value.toUpperCase().trim();
+  s.name = document.getElementById('ef-name').value.trim();
+  s.status = document.getElementById('ef-status').value;
+  s.beli = document.getElementById('ef-beli').value.trim();
+  s.jual = document.getElementById('ef-jual').value.trim();
+  s.support = document.getElementById('ef-support').value.trim();
+  s.resist = document.getElementById('ef-resist').value.trim();
+  persist(); closeOverlay('overlay-edit'); toast('✅ ' + s.ticker + ' diupdate'); renderWatchlist();
+}
+
+function deleteSaham(id) {
+  const s = sahamList.find(x => x.id === id);
+  if (!confirm('Hapus ' + (s ? s.ticker : '') + '?')) return;
+  sahamList = sahamList.filter(x => x.id !== id);
+  persist(); toast('Saham dihapus'); renderWatchlist();
+}
+
+// Toggle expand
+function toggleCard(id) {
+  expanded.has(id) ? expanded.delete(id) : expanded.add(id);
+  renderWatchlist();
+}
+
+// Quick note
+function qSetType(sahamId, type, btn) {
+  qTypes[sahamId] = type;
+  const row = document.getElementById('qnt-row-' + sahamId);
+  if (!row) return;
+  row.querySelectorAll('.qn-type-btn').forEach(b => b.classList.remove('active','mantul','reject','note'));
+  btn.classList.add('active', type);
+}
+
+function quickSave(sahamId) {
+  const el = document.getElementById('qnt-text-' + sahamId);
+  const text = el ? el.value.trim() : '';
+  if (!text) { toast('Catatan kosong'); return; }
+  const s = sahamList.find(x => x.id === sahamId);
+  notes.unshift({ id: uid(), sahamId, ticker: s ? s.ticker : '', type: qTypes[sahamId] || 'note', price: '', text, ts: new Date().toISOString() });
+  persist(); toast('📌 Catatan disimpan'); renderWatchlist();
+}
+
+function deleteNote(id) {
+  notes = notes.filter(x => x.id !== id);
+  persist(); renderWatchlist(); renderNotes(); toast('Catatan dihapus');
+}
+
+// IHSG
+function editIHSG() {
+  document.getElementById('ihsg-input').value = ihsg.val || '';
+  document.getElementById('ihsg-chg-input').value = ihsg.chg || '';
+  document.getElementById('ihsg-sesi').value = ihsg.sesi || 'Sesi 1';
+  document.getElementById('overlay-ihsg').classList.add('show');
+}
+function saveIHSG() {
+  ihsg.val = document.getElementById('ihsg-input').value.trim();
+  ihsg.chg = document.getElementById('ihsg-chg-input').value.trim();
+  ihsg.sesi = document.getElementById('ihsg-sesi').value;
+  persist(); renderIHSG(); closeOverlay('overlay-ihsg'); toast('IHSG diupdate');
+}
+function renderIHSG() {
+  document.getElementById('ihsg-val').textContent = ihsg.val || '—';
+  const chgEl = document.getElementById('ihsg-chg');
+  chgEl.textContent = ihsg.chg ? ' ' + ihsg.chg : '';
+  chgEl.className = 'chg ' + (ihsg.chg && ihsg.chg.startsWith('-') ? 'down' : 'up');
+  document.getElementById('sesi-val').textContent = ihsg.sesi || '—';
+}
+
+function addMarketNote() {
+  const note = prompt('Catatan market hari ini:');
+  if (note && note.trim()) {
+    notes.unshift({ id: uid(), sahamId: 'market', ticker: 'MARKET', type: 'note', price: '', text: note.trim(), ts: new Date().toISOString() });
+    persist(); toast('📌 Market note disimpan');
+  }
+}
+
+// Status label
+function statusLabel(s) {
+  return { 'zona-beli':'Zona Beli', 'zona-jual':'Zona Jual', 'waspadai':'Waspadai', 'netral':'Netral' }[s] || s;
+}
+
+// Render Watchlist
+function renderWatchlist() {
+  const el = document.getElementById('wl-list');
+  if (!sahamList.length) {
+    el.innerHTML = `<div class="empty"><div class="empty-icon">📋</div><p>Belum ada saham di watchlist.<br>Tap <strong>+</strong> untuk tambah saham.</p><div class="empty-hint">Catat area beli, area jual, support, resistance,<br>dan history mantul/reject tiap saham.<br>Supaya pas market buka, semua sudah siap.</div></div>`;
+    return;
+  }
+  el.innerHTML = sahamList.map(s => {
+    const isOpen = expanded.has(s.id);
+    const sahamNotes = notes.filter(n => n.sahamId === s.id).slice(0, 6);
+    if (!qTypes[s.id]) qTypes[s.id] = 'mantul';
+
+    return `<div class="saham-card ${s.status}">
+      <div class="card-top" onclick="toggleCard('${s.id}')">
+        <div>
+          <div class="card-ticker">${s.ticker}</div>
+          ${s.name ? `<div class="card-name">${s.name}</div>` : ''}
+        </div>
+        <div class="card-right">
+          <span class="status-pill ${s.status}">${statusLabel(s.status)}</span>
+          <span class="card-chevron ${isOpen?'open':''}">▼</span>
+        </div>
+      </div>
+      ${isOpen ? `
+      <div class="area-grid">
+        <div class="area-cell"><div class="area-label">AREA BELI</div><div class="area-val green">${s.beli||'—'}</div></div>
+        <div class="area-cell"><div class="area-label">AREA JUAL / TP</div><div class="area-val red">${s.jual||'—'}</div></div>
+        <div class="area-cell"><div class="area-label">SUPPORT</div><div class="area-val amber">${s.support||'—'}</div></div>
+        <div class="area-cell"><div class="area-label">RESISTANCE</div><div class="area-val muted">${s.resist||'—'}</div></div>
+      </div>
+      ${sahamNotes.length ? `
+      <div class="history-wrap">
+        <div class="history-label">HISTORY & CATATAN</div>
+        <div class="history-list">
+          ${sahamNotes.map(n => `
+          <div class="history-item">
+            <div class="h-dot ${n.type}"></div>
+            <div class="h-content">${n.price ? `<strong>${n.price}</strong> — ` : ''}${n.text}</div>
+            <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0">
+              <span class="h-time">${fmtTime(n.ts)}</span>
+              <span onclick="deleteNote('${n.id}')" style="font-size:10px;color:var(--text3);cursor:pointer">✕</span>
+            </div>
+          </div>`).join('')}
+        </div>
+      </div>` : ''}
+      <div class="quick-note-wrap">
+        <div class="qn-types" id="qnt-row-${s.id}">
+          <button class="qn-type-btn ${qTypes[s.id]==='mantul'?'active mantul':''}" onclick="qSetType('${s.id}','mantul',this)">🟢 Mantul</button>
+          <button class="qn-type-btn ${qTypes[s.id]==='reject'?'active reject':''}" onclick="qSetType('${s.id}','reject',this)">🔴 Reject</button>
+          <button class="qn-type-btn ${qTypes[s.id]==='note'?'active note':''}" onclick="qSetType('${s.id}','note',this)">📌 Catatan</button>
+        </div>
+        <div class="qn-row">
+          <textarea id="qnt-text-${s.id}" placeholder="Tulis catatan cepat..." onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();quickSave('${s.id}')}"></textarea>
+          <button class="btn-send" onclick="quickSave('${s.id}')">↑</button>
+        </div>
+      </div>
+      <div class="card-actions">
+        <button class="card-action-btn" onclick="openEdit('${s.id}')">✏️ Edit</button>
+        <button class="card-action-btn danger" onclick="deleteSaham('${s.id}')">🗑 Hapus</button>
+      </div>` : ''}
+    </div>`;
+  }).join('');
+}
+
+// Render Notes
+function renderNotes() {
+  const el = document.getElementById('notes-list');
+  if (!notes.length) {
+    el.innerHTML = `<div class="empty"><div class="empty-icon">📝</div><p>Belum ada catatan.<br>Tambah catatan dari watchlist di bawah tiap saham.</p></div>`;
+    return;
+  }
+  el.innerHTML = notes.map(n => `
+    <div class="note-entry">
+      <div class="note-meta">
+        <span class="note-ticker-tag">${n.ticker}</span>
+        <span class="note-type-tag ${n.type}">${n.type==='mantul'?'🟢 Mantul':n.type==='reject'?'🔴 Reject':'📌 Catatan'}</span>
+        ${n.price ? `<span class="note-price-tag">${n.price}</span>` : ''}
+        <span class="note-ts">${fmtTime(n.ts)}</span>
+      </div>
+      <div class="note-text">${n.text}</div>
+      <span class="note-del" onclick="deleteNote('${n.id}')">✕ hapus</span>
+    </div>`).join('');
+}
+
+// Init
+renderIHSG();
+renderWatchlist();
+</script>
+</body>
+</html>
