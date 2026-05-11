@@ -14,56 +14,138 @@
   --green:#00c896;--green-dim:rgba(0,200,150,0.12);
   --red:#ff5c5c;--red-dim:rgba(255,92,92,0.12);
   --amber:#f0a500;--amber-dim:rgba(240,165,0,0.12);
-  --blue:#4d9de0;--r:10px;--r2:14px;
+  --r:10px;--r2:14px;
   --font:'Plus Jakarta Sans',sans-serif;--mono:'DM Mono',monospace;
 }
 body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh;font-size:14px;overscroll-behavior:none}
+
+/* ═══════════════════════════
+   MOBILE LAYOUT (default)
+═══════════════════════════ */
 .app{max-width:430px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column}
+.desktop-only{display:none}
+.mobile-only{display:flex}
 
 /* HEADER */
 .hdr{display:flex;align-items:center;justify-content:space-between;padding:14px 16px 10px;position:sticky;top:0;z-index:20;background:var(--bg);border-bottom:0.5px solid var(--border)}
 .hdr-logo{display:flex;align-items:center;gap:8px}
 .hdr-dot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green)}
 .hdr-name{font-size:15px;font-weight:700;letter-spacing:0.03em}
+.hdr-sub{font-size:10px;color:var(--text3);letter-spacing:0.1em;margin-top:1px}
 .hdr-right{display:flex;align-items:center;gap:8px}
 .hdr-time{font-family:var(--mono);font-size:12px;color:var(--text2)}
-.hdr-add{width:32px;height:32px;border-radius:50%;background:var(--green);border:none;color:#000;font-size:22px;font-weight:300;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1}
+.hdr-add{width:32px;height:32px;border-radius:50%;background:var(--green);border:none;color:#000;font-size:22px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-weight:300}
 
 /* IHSG BAR */
-.ihsg-bar{display:flex;gap:8px;overflow-x:auto;padding:8px 16px;border-bottom:0.5px solid var(--border);scrollbar-width:none}
+.ihsg-bar{display:flex;gap:8px;overflow-x:auto;padding:8px 16px;border-bottom:0.5px solid var(--border);scrollbar-width:none;flex-shrink:0}
 .ihsg-bar::-webkit-scrollbar{display:none}
-.ihsg-chip{flex-shrink:0;background:var(--bg3);border:0.5px solid var(--border);border-radius:20px;padding:5px 12px;font-family:var(--mono);font-size:11px;color:var(--text2);white-space:nowrap;cursor:pointer}
+.ihsg-chip{flex-shrink:0;background:var(--bg3);border:0.5px solid var(--border);border-radius:20px;padding:5px 12px;font-family:var(--mono);font-size:11px;color:var(--text2);white-space:nowrap;cursor:pointer;user-select:none}
 .ihsg-chip span{color:var(--text);font-weight:500}
-.ihsg-chip .chg.up{color:var(--green)}
-.ihsg-chip .chg.down{color:var(--red)}
+.chg.up{color:var(--green)}.chg.down{color:var(--red)}
 
-/* CONTENT */
+/* CONTENT MOBILE */
 .content{flex:1;padding:12px 16px 100px;overflow-y:auto}
 .panel{display:none}.panel.active{display:block}
 
-/* EMPTY */
-.empty{text-align:center;padding:60px 20px;color:var(--text3)}
-.empty-icon{font-size:40px;margin-bottom:12px}
-.empty p{font-size:13px;line-height:1.7;color:var(--text2)}
-.empty-hint{margin-top:20px;font-size:12px;color:var(--text3);border:0.5px dashed var(--border2);border-radius:var(--r);padding:12px;line-height:1.8}
+/* BOTTOM NAV (mobile) */
+.bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;display:flex;background:var(--bg);border-top:0.5px solid var(--border);z-index:20;padding-bottom:env(safe-area-inset-bottom)}
+.bnav-btn{flex:1;padding:12px 4px 10px;background:transparent;border:none;color:var(--text3);font-family:var(--font);font-size:10px;font-weight:500;letter-spacing:0.05em;cursor:pointer;transition:color 0.15s;display:flex;flex-direction:column;align-items:center;gap:4px}
+.bnav-icon{font-size:20px;line-height:1}
+.bnav-btn.active{color:var(--green)}
 
-/* SAHAM CARD */
+/* ═══════════════════════════
+   DESKTOP LAYOUT (≥900px)
+═══════════════════════════ */
+@media(min-width:900px){
+  body{background:var(--bg)}
+
+  .app{max-width:100%;flex-direction:column;height:100vh;overflow:hidden}
+  .desktop-only{display:flex}
+  .mobile-only{display:none}
+
+  /* Desktop header */
+  .hdr{max-width:100%;padding:12px 28px;border-bottom:0.5px solid var(--border)}
+  .hdr-name{font-size:16px}
+  .hdr-add{width:34px;height:34px}
+
+  /* IHSG bar desktop */
+  .ihsg-bar{padding:8px 28px;border-bottom:0.5px solid var(--border)}
+
+  /* Main layout: sidebar + content */
+  .desktop-layout{display:flex;flex:1;overflow:hidden}
+
+  /* SIDEBAR */
+  .sidebar{
+    width:300px;flex-shrink:0;
+    border-right:0.5px solid var(--border);
+    display:flex;flex-direction:column;
+    overflow:hidden;
+  }
+  .sidebar-tabs{display:flex;border-bottom:0.5px solid var(--border);flex-shrink:0}
+  .stab{flex:1;padding:10px 8px;background:transparent;border:none;color:var(--text3);font-family:var(--font);font-size:11px;font-weight:500;letter-spacing:0.05em;cursor:pointer;border-bottom:2px solid transparent;transition:all 0.15s}
+  .stab.active{color:var(--green);border-bottom-color:var(--green)}
+  .sidebar-content{flex:1;overflow-y:auto;padding:12px}
+
+  /* DETAIL PANE */
+  .detail-pane{
+    flex:1;overflow-y:auto;
+    padding:24px 28px;
+    display:flex;flex-direction:column;
+  }
+  .detail-empty{
+    flex:1;display:flex;flex-direction:column;
+    align-items:center;justify-content:center;
+    color:var(--text3);text-align:center;
+  }
+  .detail-empty-icon{font-size:48px;margin-bottom:16px;opacity:0.5}
+  .detail-empty p{font-size:13px;line-height:1.8;color:var(--text2)}
+
+  /* Mobile-specific hidden on desktop */
+  .content{display:none}
+  .bottom-nav{display:none}
+}
+
+/* ═══════════════════════════
+   SHARED COMPONENTS
+═══════════════════════════ */
+
+/* EMPTY */
+.empty{text-align:center;padding:40px 20px;color:var(--text3)}
+.empty-icon{font-size:36px;margin-bottom:10px}
+.empty p{font-size:13px;line-height:1.7;color:var(--text2)}
+.empty-hint{margin-top:16px;font-size:12px;color:var(--text3);border:0.5px dashed var(--border2);border-radius:var(--r);padding:12px;line-height:1.8}
+
+/* SAHAM LIST ITEM (sidebar/mobile) */
+.saham-item{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:10px 12px;border-radius:var(--r);
+  cursor:pointer;transition:background 0.1s;margin-bottom:4px;
+  border:0.5px solid transparent;
+}
+.saham-item:hover{background:var(--bg3)}
+.saham-item.selected{background:var(--bg3);border-color:var(--border2)}
+.saham-item.zona-beli{border-left:2.5px solid var(--green)}
+.saham-item.zona-jual{border-left:2.5px solid var(--red)}
+.saham-item.waspadai{border-left:2.5px solid var(--amber)}
+.saham-item.netral{border-left:2.5px solid var(--text3)}
+.si-ticker{font-family:var(--mono);font-size:14px;font-weight:500}
+.si-name{font-size:10px;color:var(--text3);margin-top:1px}
+.status-pill{font-size:9px;font-weight:700;letter-spacing:0.07em;padding:2px 8px;border-radius:20px;white-space:nowrap}
+.status-pill.zona-beli{background:var(--green-dim);color:var(--green)}
+.status-pill.zona-jual{background:var(--red-dim);color:var(--red)}
+.status-pill.waspadai{background:var(--amber-dim);color:var(--amber)}
+.status-pill.netral{background:var(--bg4);color:var(--text2)}
+
+/* MOBILE CARD (expanded) */
 .saham-card{background:var(--bg2);border:0.5px solid var(--border);border-radius:var(--r2);margin-bottom:10px;overflow:hidden}
 .saham-card.zona-beli{border-left:2.5px solid var(--green)}
 .saham-card.zona-jual{border-left:2.5px solid var(--red)}
 .saham-card.waspadai{border-left:2.5px solid var(--amber)}
 .saham-card.netral{border-left:2.5px solid var(--text3)}
-
 .card-top{display:flex;align-items:center;justify-content:space-between;padding:13px 14px 11px;cursor:pointer}
-.card-ticker{font-family:var(--mono);font-size:17px;font-weight:500;letter-spacing:0.03em}
+.card-ticker{font-family:var(--mono);font-size:17px;font-weight:500}
 .card-name{font-size:11px;color:var(--text2);margin-top:2px}
 .card-right{display:flex;flex-direction:column;align-items:flex-end;gap:5px}
-
-.status-pill{font-size:10px;font-weight:600;letter-spacing:0.07em;padding:3px 9px;border-radius:20px}
-.status-pill.zona-beli{background:var(--green-dim);color:var(--green)}
-.status-pill.zona-jual{background:var(--red-dim);color:var(--red)}
-.status-pill.waspadai{background:var(--amber-dim);color:var(--amber)}
-.status-pill.netral{background:var(--bg4);color:var(--text2)}
 .card-chevron{font-size:11px;color:var(--text3);transition:transform 0.2s;display:inline-block}
 .card-chevron.open{transform:rotate(180deg)}
 
@@ -73,6 +155,10 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 .area-label{font-size:9px;color:var(--text3);letter-spacing:0.1em;margin-bottom:3px}
 .area-val{font-family:var(--mono);font-size:13px;font-weight:500}
 .area-val.green{color:var(--green)}.area-val.red{color:var(--red)}.area-val.amber{color:var(--amber)}.area-val.muted{color:var(--text2)}
+
+/* DESKTOP DETAIL AREA GRID */
+.detail-area-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:24px}
+.detail-area-cell{background:var(--bg2);border:0.5px solid var(--border);border-radius:var(--r);padding:12px 14px}
 
 /* HISTORY */
 .history-wrap{padding:10px 14px;border-top:0.5px solid var(--border);background:var(--bg2)}
@@ -93,7 +179,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 .qn-type-btn.active.reject{background:var(--red-dim);color:var(--red);border-color:var(--red)}
 .qn-type-btn.active.note{background:var(--amber-dim);color:var(--amber);border-color:var(--amber)}
 .qn-row{display:flex;gap:8px;align-items:flex-end}
-.qn-row textarea{flex:1;background:var(--bg4);border:0.5px solid var(--border2);color:var(--text);font-family:var(--font);font-size:12px;padding:8px 10px;border-radius:var(--r);outline:none;resize:none;min-height:38px;max-height:80px;line-height:1.5}
+.qn-row textarea{flex:1;background:var(--bg4);border:0.5px solid var(--border2);color:var(--text);font-family:var(--font);font-size:12px;padding:8px 10px;border-radius:var(--r);outline:none;resize:none;min-height:38px;max-height:100px;line-height:1.5}
 .qn-row textarea:focus{border-color:var(--green)}
 .btn-send{width:38px;height:38px;border-radius:var(--r);background:var(--green);border:none;color:#000;font-size:18px;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-weight:500}
 
@@ -104,33 +190,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 .card-action-btn:hover{background:var(--bg3);color:var(--text)}
 .card-action-btn.danger:hover{color:var(--red);background:var(--red-dim)}
 
-/* BOTTOM NAV */
-.bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;display:flex;background:var(--bg);border-top:0.5px solid var(--border);z-index:20;padding-bottom:env(safe-area-inset-bottom)}
-.bnav-btn{flex:1;padding:12px 4px 10px;background:transparent;border:none;color:var(--text3);font-family:var(--font);font-size:10px;font-weight:500;letter-spacing:0.05em;cursor:pointer;transition:color 0.15s;display:flex;flex-direction:column;align-items:center;gap:4px}
-.bnav-icon{font-size:20px;line-height:1}
-.bnav-btn.active{color:var(--green)}
-
-/* OVERLAY / SHEET */
-.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:50;align-items:flex-end;justify-content:center}
-.overlay.show{display:flex}
-.sheet{background:var(--bg2);border-radius:20px 20px 0 0;border-top:0.5px solid var(--border2);width:100%;max-width:430px;max-height:92vh;overflow-y:auto;padding:0 0 40px;animation:slideUp 0.25s ease}
-@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
-.sheet-handle{width:36px;height:4px;border-radius:2px;background:var(--border2);margin:12px auto 16px}
-.sheet-title{font-size:15px;font-weight:600;padding:0 20px 16px;border-bottom:0.5px solid var(--border);margin-bottom:16px}
-.sheet-body{padding:0 20px}
-
-/* FORM */
-.f-label{font-size:10px;color:var(--text3);letter-spacing:0.1em;margin-bottom:5px}
-.f-group{margin-bottom:14px}
-.f-row{display:flex;gap:8px}.f-row .f-group{flex:1}
-input,select,textarea{width:100%;background:var(--bg3);border:0.5px solid var(--border2);color:var(--text);font-family:var(--font);font-size:13px;padding:10px 12px;border-radius:var(--r);outline:none;appearance:none}
-input:focus,select:focus,textarea:focus{border-color:var(--green)}
-textarea{resize:none;min-height:70px;line-height:1.5}
-select option{background:var(--bg3)}
-.btn-full{width:100%;padding:13px;background:var(--green);border:none;color:#000;font-family:var(--font);font-size:14px;font-weight:700;border-radius:var(--r);cursor:pointer;margin-top:4px}
-.btn-cancel{width:100%;padding:11px;background:transparent;border:0.5px solid var(--border2);color:var(--text2);font-family:var(--font);font-size:13px;border-radius:var(--r);cursor:pointer;margin-top:8px}
-
-/* NOTES PANEL */
+/* NOTES LIST */
 .note-entry{padding:12px 0;border-bottom:0.5px solid var(--border)}
 .note-entry:last-child{border-bottom:none}
 .note-meta{display:flex;align-items:center;gap:6px;margin-bottom:6px;flex-wrap:wrap}
@@ -140,22 +200,65 @@ select option{background:var(--bg3)}
 .note-type-tag.reject{background:var(--red-dim);color:var(--red)}
 .note-type-tag.note{background:var(--amber-dim);color:var(--amber)}
 .note-ts{font-size:10px;color:var(--text3);margin-left:auto}
-.note-price-tag{font-family:var(--mono);font-size:11px;color:var(--text2)}
 .note-text{font-size:13px;color:var(--text2);line-height:1.6}
 .note-del{font-size:11px;color:var(--text3);cursor:pointer;margin-top:6px;display:inline-block}
+.note-del:hover{color:var(--red)}
+
+/* SECTION TITLE */
+.section-title{font-size:10px;color:var(--text3);letter-spacing:0.12em;margin-bottom:12px;padding-bottom:8px;border-bottom:0.5px solid var(--border)}
+
+/* DETAIL HEADER */
+.detail-hdr{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:20px}
+.detail-ticker{font-family:var(--mono);font-size:26px;font-weight:500}
+.detail-name{font-size:13px;color:var(--text2);margin-top:3px}
+.detail-actions{display:flex;gap:8px}
+.btn-sm{padding:7px 14px;border-radius:var(--r);border:0.5px solid var(--border2);background:transparent;color:var(--text2);font-family:var(--font);font-size:12px;cursor:pointer;transition:all 0.1s}
+.btn-sm:hover{background:var(--bg3);color:var(--text)}
+.btn-sm.danger:hover{color:var(--red);background:var(--red-dim)}
+
+/* FORM */
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:50;align-items:flex-end;justify-content:center}
+.overlay.show{display:flex}
+@media(min-width:900px){.overlay{align-items:center}}
+.sheet{background:var(--bg2);border-radius:20px 20px 0 0;border-top:0.5px solid var(--border2);width:100%;max-width:480px;max-height:92vh;overflow-y:auto;padding:0 0 40px;animation:slideUp 0.22s ease}
+@media(min-width:900px){.sheet{border-radius:16px;max-height:85vh;animation:fadeIn 0.18s ease}}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.sheet-handle{width:36px;height:4px;border-radius:2px;background:var(--border2);margin:12px auto 16px}
+@media(min-width:900px){.sheet-handle{display:none}}
+.sheet-title{font-size:15px;font-weight:600;padding:0 20px 16px;border-bottom:0.5px solid var(--border);margin-bottom:16px}
+@media(min-width:900px){.sheet-title{padding:20px 24px 16px}}
+.sheet-body{padding:0 20px}
+@media(min-width:900px){.sheet-body{padding:0 24px}}
+
+.f-label{font-size:10px;color:var(--text3);letter-spacing:0.1em;margin-bottom:5px}
+.f-group{margin-bottom:14px}
+.f-row{display:flex;gap:8px}.f-row .f-group{flex:1;min-width:0}
+input,select,textarea{width:100%;background:var(--bg3);border:0.5px solid var(--border2);color:var(--text);font-family:var(--font);font-size:13px;padding:10px 12px;border-radius:var(--r);outline:none;appearance:none}
+input:focus,select:focus,textarea:focus{border-color:var(--green)}
+textarea{resize:none;min-height:70px;line-height:1.5}
+select option{background:var(--bg3)}
+.btn-full{width:100%;padding:13px;background:var(--green);border:none;color:#000;font-family:var(--font);font-size:14px;font-weight:700;border-radius:var(--r);cursor:pointer;margin-top:4px;transition:opacity 0.15s}
+.btn-full:hover{opacity:0.88}
+.btn-cancel{width:100%;padding:11px;background:transparent;border:0.5px solid var(--border2);color:var(--text2);font-family:var(--font);font-size:13px;border-radius:var(--r);cursor:pointer;margin-top:8px}
 
 /* TOAST */
 .toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:var(--bg4);border:0.5px solid var(--border2);color:var(--text);font-size:12px;padding:8px 16px;border-radius:20px;z-index:200;opacity:0;transition:opacity 0.2s;pointer-events:none;white-space:nowrap}
 .toast.show{opacity:1}
+@media(min-width:900px){.toast{bottom:24px}}
 </style>
 </head>
 <body>
 <div class="app">
 
+  <!-- HEADER -->
   <div class="hdr">
     <div class="hdr-logo">
       <div class="hdr-dot"></div>
-      <div class="hdr-name">CuanPeople</div>
+      <div>
+        <div class="hdr-name">CuanPeople</div>
+        <div class="hdr-sub desktop-only" style="display:block">TRADING NOTEBOOK</div>
+      </div>
     </div>
     <div class="hdr-right">
       <div class="hdr-time" id="clock">--:--</div>
@@ -163,13 +266,40 @@ select option{background:var(--bg3)}
     </div>
   </div>
 
+  <!-- IHSG BAR -->
   <div class="ihsg-bar">
     <div class="ihsg-chip" onclick="editIHSG()">IHSG <span id="ihsg-val">—</span> <span class="chg" id="ihsg-chg"></span></div>
-    <div class="ihsg-chip" id="sesi-chip">Sesi: <span id="sesi-val">—</span></div>
+    <div class="ihsg-chip">Sesi: <span id="sesi-val">—</span></div>
     <div class="ihsg-chip" onclick="addMarketNote()">📝 Market note</div>
   </div>
 
-  <div class="content">
+  <!-- ══ DESKTOP LAYOUT ══ -->
+  <div class="desktop-layout desktop-only">
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+      <div class="sidebar-tabs">
+        <button class="stab active" onclick="sidebarTab('watchlist',this)">Watchlist</button>
+        <button class="stab" onclick="sidebarTab('notes',this)">Catatan</button>
+      </div>
+      <div class="sidebar-content">
+        <div id="sb-watchlist"><div class="empty"><div class="empty-icon">📋</div><p>Belum ada saham.<br>Tap + untuk tambah.</p></div></div>
+        <div id="sb-notes" style="display:none"></div>
+      </div>
+    </div>
+
+    <!-- DETAIL PANE -->
+    <div class="detail-pane" id="detail-pane">
+      <div class="detail-empty">
+        <div class="detail-empty-icon">👈</div>
+        <p>Pilih saham dari sidebar<br>untuk lihat detail, area kunci, dan catatan.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ══ MOBILE LAYOUT ══ -->
+  <div class="content mobile-only" style="flex-direction:column">
     <div class="panel active" id="panel-watchlist">
       <div id="wl-list"></div>
     </div>
@@ -178,17 +308,19 @@ select option{background:var(--bg3)}
     </div>
   </div>
 
-  <div class="bottom-nav">
+  <!-- BOTTOM NAV (mobile) -->
+  <div class="bottom-nav mobile-only">
     <button class="bnav-btn active" onclick="switchPanel('watchlist',this)">
       <span class="bnav-icon">👁</span>Watchlist
     </button>
     <button class="bnav-btn" onclick="switchPanel('notes',this)">
-      <span class="bnav-icon">📝</span>Semua Catatan
+      <span class="bnav-icon">📝</span>Catatan
     </button>
   </div>
+
 </div>
 
-<!-- TAMBAH SAHAM -->
+<!-- MODAL: TAMBAH SAHAM -->
 <div class="overlay" id="overlay-add" onclick="bgClose(event,'overlay-add')">
   <div class="sheet">
     <div class="sheet-handle"></div>
@@ -214,28 +346,16 @@ select option{background:var(--bg3)}
         <input id="f-name" placeholder="Bank Rakyat Indonesia">
       </div>
       <div class="f-row">
-        <div class="f-group">
-          <div class="f-label">AREA BELI</div>
-          <input id="f-beli" placeholder="4.100 – 4.180">
-        </div>
-        <div class="f-group">
-          <div class="f-label">AREA JUAL / TP</div>
-          <input id="f-jual" placeholder="4.450 – 4.500">
-        </div>
+        <div class="f-group"><div class="f-label">AREA BELI</div><input id="f-beli" placeholder="4.100 – 4.180"></div>
+        <div class="f-group"><div class="f-label">AREA JUAL / TP</div><input id="f-jual" placeholder="4.450 – 4.500"></div>
       </div>
       <div class="f-row">
-        <div class="f-group">
-          <div class="f-label">SUPPORT</div>
-          <input id="f-support" placeholder="3.980">
-        </div>
-        <div class="f-group">
-          <div class="f-label">RESISTANCE</div>
-          <input id="f-resist" placeholder="4.600">
-        </div>
+        <div class="f-group"><div class="f-label">SUPPORT</div><input id="f-support" placeholder="3.980"></div>
+        <div class="f-group"><div class="f-label">RESISTANCE</div><input id="f-resist" placeholder="4.600"></div>
       </div>
       <div class="f-group">
         <div class="f-label">CATATAN AWAL (opsional)</div>
-        <textarea id="f-note" placeholder="Contoh: selalu mantul kuat di 4.100, reject di 4.500 beberapa kali sebelumnya..."></textarea>
+        <textarea id="f-note" placeholder="Contoh: selalu mantul kuat di 4.100, reject di 4.500..."></textarea>
       </div>
       <button class="btn-full" onclick="saveSaham()">Simpan</button>
       <button class="btn-cancel" onclick="closeOverlay('overlay-add')">Batal</button>
@@ -243,7 +363,7 @@ select option{background:var(--bg3)}
   </div>
 </div>
 
-<!-- EDIT SAHAM -->
+<!-- MODAL: EDIT SAHAM -->
 <div class="overlay" id="overlay-edit" onclick="bgClose(event,'overlay-edit')">
   <div class="sheet">
     <div class="sheet-handle"></div>
@@ -265,10 +385,7 @@ select option{background:var(--bg3)}
           </select>
         </div>
       </div>
-      <div class="f-group">
-        <div class="f-label">NAMA</div>
-        <input id="ef-name" placeholder="Nama perusahaan">
-      </div>
+      <div class="f-group"><div class="f-label">NAMA</div><input id="ef-name" placeholder="Nama perusahaan"></div>
       <div class="f-row">
         <div class="f-group"><div class="f-label">AREA BELI</div><input id="ef-beli"></div>
         <div class="f-group"><div class="f-label">AREA JUAL / TP</div><input id="ef-jual"></div>
@@ -283,7 +400,7 @@ select option{background:var(--bg3)}
   </div>
 </div>
 
-<!-- IHSG -->
+<!-- MODAL: IHSG -->
 <div class="overlay" id="overlay-ihsg" onclick="bgClose(event,'overlay-ihsg')">
   <div class="sheet">
     <div class="sheet-handle"></div>
@@ -296,11 +413,8 @@ select option{background:var(--bg3)}
       <div class="f-group">
         <div class="f-label">KONDISI</div>
         <select id="ihsg-sesi">
-          <option>Pre-market</option>
-          <option>Sesi 1</option>
-          <option>Istirahat</option>
-          <option>Sesi 2</option>
-          <option>After market</option>
+          <option>Pre-market</option><option>Sesi 1</option>
+          <option>Istirahat</option><option>Sesi 2</option><option>After market</option>
         </select>
       </div>
       <button class="btn-full" onclick="saveIHSG()">Update</button>
@@ -313,10 +427,11 @@ select option{background:var(--bg3)}
 
 <script>
 let sahamList = JSON.parse(localStorage.getItem('cp_saham') || '[]');
-let notes = JSON.parse(localStorage.getItem('cp_notes') || '[]');
-let ihsg = JSON.parse(localStorage.getItem('cp_ihsg') || '{"val":"","chg":"","sesi":""}');
-let expanded = new Set();
-let qTypes = {};
+let notes     = JSON.parse(localStorage.getItem('cp_notes') || '[]');
+let ihsg      = JSON.parse(localStorage.getItem('cp_ihsg') || '{"val":"","chg":"","sesi":""}');
+let expanded  = new Set();
+let qTypes    = {};
+let selectedId = null;
 
 function persist() {
   localStorage.setItem('cp_saham', JSON.stringify(sahamList));
@@ -338,30 +453,43 @@ function fmtTime(iso) {
     d.toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'});
 }
 
+function isDesktop() { return window.innerWidth >= 900; }
+
 // Clock
 function tick() {
-  document.getElementById('clock').textContent = new Date().toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'});
+  document.getElementById('clock').textContent =
+    new Date().toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'});
 }
 tick(); setInterval(tick, 15000);
 
-// Panel
+// Mobile panel
 function switchPanel(name, btn) {
   document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.bnav-btn').forEach(b => b.classList.remove('active'));
   document.getElementById('panel-'+name).classList.add('active');
   btn.classList.add('active');
-  if (name === 'notes') renderNotes();
+  if (name === 'notes') renderNotesMobile();
+}
+
+// Desktop sidebar tab
+function sidebarTab(name, btn) {
+  document.querySelectorAll('.stab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('sb-watchlist').style.display = name === 'watchlist' ? 'block' : 'none';
+  document.getElementById('sb-notes').style.display = name === 'notes' ? 'block' : 'none';
+  if (name === 'notes') renderSidebarNotes();
 }
 
 // Overlay
 function closeOverlay(id) { document.getElementById(id).classList.remove('show'); }
 function bgClose(e, id) { if (e.target.id === id) closeOverlay(id); }
 
-// Add
+// Add Saham
 function openAdd() {
   ['f-ticker','f-name','f-beli','f-jual','f-support','f-resist','f-note'].forEach(id => document.getElementById(id).value = '');
   document.getElementById('f-status').value = 'netral';
   document.getElementById('overlay-add').classList.add('show');
+  setTimeout(() => document.getElementById('f-ticker').focus(), 300);
 }
 
 function saveSaham() {
@@ -369,23 +497,32 @@ function saveSaham() {
   if (!ticker) { toast('Ticker wajib diisi'); return; }
   const id = uid();
   const initNote = document.getElementById('f-note').value.trim();
-  sahamList.unshift({ id, ticker, name: document.getElementById('f-name').value.trim(), status: document.getElementById('f-status').value, beli: document.getElementById('f-beli').value.trim(), jual: document.getElementById('f-jual').value.trim(), support: document.getElementById('f-support').value.trim(), resist: document.getElementById('f-resist').value.trim(), createdAt: new Date().toISOString() });
+  sahamList.unshift({
+    id, ticker,
+    name: document.getElementById('f-name').value.trim(),
+    status: document.getElementById('f-status').value,
+    beli: document.getElementById('f-beli').value.trim(),
+    jual: document.getElementById('f-jual').value.trim(),
+    support: document.getElementById('f-support').value.trim(),
+    resist: document.getElementById('f-resist').value.trim(),
+    createdAt: new Date().toISOString()
+  });
   if (initNote) notes.unshift({ id: uid(), sahamId: id, ticker, type: 'note', price: '', text: initNote, ts: new Date().toISOString() });
-  persist(); closeOverlay('overlay-add'); toast('✅ ' + ticker + ' ditambahkan'); renderWatchlist();
+  persist();
+  closeOverlay('overlay-add');
+  toast('✅ ' + ticker + ' ditambahkan');
+  renderAll();
 }
 
-// Edit
+// Edit Saham
 function openEdit(id) {
   const s = sahamList.find(x => x.id === id); if (!s) return;
   document.getElementById('edit-id').value = s.id;
   document.getElementById('edit-title').textContent = 'Edit ' + s.ticker;
-  document.getElementById('ef-ticker').value = s.ticker;
-  document.getElementById('ef-name').value = s.name || '';
+  ['ticker','name','beli','jual','support','resist'].forEach(f => {
+    document.getElementById('ef-'+f).value = s[f] || '';
+  });
   document.getElementById('ef-status').value = s.status;
-  document.getElementById('ef-beli').value = s.beli || '';
-  document.getElementById('ef-jual').value = s.jual || '';
-  document.getElementById('ef-support').value = s.support || '';
-  document.getElementById('ef-resist').value = s.resist || '';
   document.getElementById('overlay-edit').classList.add('show');
 }
 
@@ -394,49 +531,61 @@ function updateSaham() {
   const idx = sahamList.findIndex(x => x.id === id); if (idx < 0) return;
   const s = sahamList[idx];
   s.ticker = document.getElementById('ef-ticker').value.toUpperCase().trim();
-  s.name = document.getElementById('ef-name').value.trim();
+  s.name   = document.getElementById('ef-name').value.trim();
   s.status = document.getElementById('ef-status').value;
-  s.beli = document.getElementById('ef-beli').value.trim();
-  s.jual = document.getElementById('ef-jual').value.trim();
-  s.support = document.getElementById('ef-support').value.trim();
+  s.beli   = document.getElementById('ef-beli').value.trim();
+  s.jual   = document.getElementById('ef-jual').value.trim();
+  s.support= document.getElementById('ef-support').value.trim();
   s.resist = document.getElementById('ef-resist').value.trim();
-  persist(); closeOverlay('overlay-edit'); toast('✅ ' + s.ticker + ' diupdate'); renderWatchlist();
+  persist();
+  closeOverlay('overlay-edit');
+  toast('✅ ' + s.ticker + ' diupdate');
+  if (selectedId === id) renderDetail(id);
+  renderAll();
 }
 
 function deleteSaham(id) {
   const s = sahamList.find(x => x.id === id);
   if (!confirm('Hapus ' + (s ? s.ticker : '') + '?')) return;
   sahamList = sahamList.filter(x => x.id !== id);
-  persist(); toast('Saham dihapus'); renderWatchlist();
+  if (selectedId === id) { selectedId = null; renderDetailEmpty(); }
+  persist(); toast('Saham dihapus'); renderAll();
 }
 
-// Toggle expand
+// Mobile toggle
 function toggleCard(id) {
   expanded.has(id) ? expanded.delete(id) : expanded.add(id);
-  renderWatchlist();
+  renderWatchlistMobile();
 }
 
 // Quick note
 function qSetType(sahamId, type, btn) {
   qTypes[sahamId] = type;
-  const row = document.getElementById('qnt-row-' + sahamId);
+  const row = document.getElementById('qnt-row-'+sahamId);
   if (!row) return;
   row.querySelectorAll('.qn-type-btn').forEach(b => b.classList.remove('active','mantul','reject','note'));
   btn.classList.add('active', type);
 }
 
 function quickSave(sahamId) {
-  const el = document.getElementById('qnt-text-' + sahamId);
+  const el = document.getElementById('qnt-text-'+sahamId);
   const text = el ? el.value.trim() : '';
   if (!text) { toast('Catatan kosong'); return; }
   const s = sahamList.find(x => x.id === sahamId);
   notes.unshift({ id: uid(), sahamId, ticker: s ? s.ticker : '', type: qTypes[sahamId] || 'note', price: '', text, ts: new Date().toISOString() });
-  persist(); toast('📌 Catatan disimpan'); renderWatchlist();
+  persist(); toast('📌 Catatan disimpan');
+  if (isDesktop() && selectedId === sahamId) renderDetail(sahamId);
+  else renderWatchlistMobile();
 }
 
 function deleteNote(id) {
   notes = notes.filter(x => x.id !== id);
-  persist(); renderWatchlist(); renderNotes(); toast('Catatan dihapus');
+  persist();
+  if (isDesktop() && selectedId) renderDetail(selectedId);
+  else renderWatchlistMobile();
+  renderSidebarNotes();
+  renderNotesMobile();
+  toast('Catatan dihapus');
 }
 
 // IHSG
@@ -447,8 +596,8 @@ function editIHSG() {
   document.getElementById('overlay-ihsg').classList.add('show');
 }
 function saveIHSG() {
-  ihsg.val = document.getElementById('ihsg-input').value.trim();
-  ihsg.chg = document.getElementById('ihsg-chg-input').value.trim();
+  ihsg.val  = document.getElementById('ihsg-input').value.trim();
+  ihsg.chg  = document.getElementById('ihsg-chg-input').value.trim();
   ihsg.sesi = document.getElementById('ihsg-sesi').value;
   persist(); renderIHSG(); closeOverlay('overlay-ihsg'); toast('IHSG diupdate');
 }
@@ -465,83 +614,69 @@ function addMarketNote() {
   if (note && note.trim()) {
     notes.unshift({ id: uid(), sahamId: 'market', ticker: 'MARKET', type: 'note', price: '', text: note.trim(), ts: new Date().toISOString() });
     persist(); toast('📌 Market note disimpan');
+    renderSidebarNotes(); renderNotesMobile();
   }
 }
 
-// Status label
 function statusLabel(s) {
-  return { 'zona-beli':'Zona Beli', 'zona-jual':'Zona Jual', 'waspadai':'Waspadai', 'netral':'Netral' }[s] || s;
+  return {'zona-beli':'Zona Beli','zona-jual':'Zona Jual','waspadai':'Waspadai','netral':'Netral'}[s]||s;
 }
 
-// Render Watchlist
-function renderWatchlist() {
-  const el = document.getElementById('wl-list');
+function quickNoteHTML(sahamId) {
+  const type = qTypes[sahamId] || 'mantul';
+  return `<div class="quick-note-wrap">
+    <div class="qn-types" id="qnt-row-${sahamId}">
+      <button class="qn-type-btn ${type==='mantul'?'active mantul':''}" onclick="qSetType('${sahamId}','mantul',this)">🟢 Mantul</button>
+      <button class="qn-type-btn ${type==='reject'?'active reject':''}" onclick="qSetType('${sahamId}','reject',this)">🔴 Reject</button>
+      <button class="qn-type-btn ${type==='note'?'active note':''}" onclick="qSetType('${sahamId}','note',this)">📌 Catatan</button>
+    </div>
+    <div class="qn-row">
+      <textarea id="qnt-text-${sahamId}" placeholder="Tulis catatan cepat..." onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();quickSave('${sahamId}')}"></textarea>
+      <button class="btn-send" onclick="quickSave('${sahamId}')">↑</button>
+    </div>
+  </div>`;
+}
+
+function historyHTML(sahamId, limit) {
+  const list = notes.filter(n => n.sahamId === sahamId).slice(0, limit || 999);
+  if (!list.length) return '';
+  return `<div class="history-wrap">
+    <div class="history-label">HISTORY & CATATAN</div>
+    <div class="history-list">
+      ${list.map(n => `<div class="history-item">
+        <div class="h-dot ${n.type}"></div>
+        <div class="h-content">${n.price?`<strong>${n.price}</strong> — `:''}${n.text}</div>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0">
+          <span class="h-time">${fmtTime(n.ts)}</span>
+          <span onclick="deleteNote('${n.id}')" style="font-size:10px;color:var(--text3);cursor:pointer">✕</span>
+        </div>
+      </div>`).join('')}
+    </div>
+  </div>`;
+}
+
+// ── DESKTOP: Sidebar watchlist ──
+function renderSidebarWatchlist() {
+  const el = document.getElementById('sb-watchlist');
   if (!sahamList.length) {
-    el.innerHTML = `<div class="empty"><div class="empty-icon">📋</div><p>Belum ada saham di watchlist.<br>Tap <strong>+</strong> untuk tambah saham.</p><div class="empty-hint">Catat area beli, area jual, support, resistance,<br>dan history mantul/reject tiap saham.<br>Supaya pas market buka, semua sudah siap.</div></div>`;
+    el.innerHTML = `<div class="empty"><div class="empty-icon">📋</div><p>Belum ada saham.<br>Tap + untuk tambah.</p></div>`;
     return;
   }
-  el.innerHTML = sahamList.map(s => {
-    const isOpen = expanded.has(s.id);
-    const sahamNotes = notes.filter(n => n.sahamId === s.id).slice(0, 6);
-    if (!qTypes[s.id]) qTypes[s.id] = 'mantul';
-
-    return `<div class="saham-card ${s.status}">
-      <div class="card-top" onclick="toggleCard('${s.id}')">
-        <div>
-          <div class="card-ticker">${s.ticker}</div>
-          ${s.name ? `<div class="card-name">${s.name}</div>` : ''}
-        </div>
-        <div class="card-right">
-          <span class="status-pill ${s.status}">${statusLabel(s.status)}</span>
-          <span class="card-chevron ${isOpen?'open':''}">▼</span>
-        </div>
+  el.innerHTML = sahamList.map(s => `
+    <div class="saham-item ${s.status} ${selectedId===s.id?'selected':''}" onclick="selectSaham('${s.id}')">
+      <div>
+        <div class="si-ticker">${s.ticker}</div>
+        ${s.name?`<div class="si-name">${s.name}</div>`:''}
       </div>
-      ${isOpen ? `
-      <div class="area-grid">
-        <div class="area-cell"><div class="area-label">AREA BELI</div><div class="area-val green">${s.beli||'—'}</div></div>
-        <div class="area-cell"><div class="area-label">AREA JUAL / TP</div><div class="area-val red">${s.jual||'—'}</div></div>
-        <div class="area-cell"><div class="area-label">SUPPORT</div><div class="area-val amber">${s.support||'—'}</div></div>
-        <div class="area-cell"><div class="area-label">RESISTANCE</div><div class="area-val muted">${s.resist||'—'}</div></div>
-      </div>
-      ${sahamNotes.length ? `
-      <div class="history-wrap">
-        <div class="history-label">HISTORY & CATATAN</div>
-        <div class="history-list">
-          ${sahamNotes.map(n => `
-          <div class="history-item">
-            <div class="h-dot ${n.type}"></div>
-            <div class="h-content">${n.price ? `<strong>${n.price}</strong> — ` : ''}${n.text}</div>
-            <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0">
-              <span class="h-time">${fmtTime(n.ts)}</span>
-              <span onclick="deleteNote('${n.id}')" style="font-size:10px;color:var(--text3);cursor:pointer">✕</span>
-            </div>
-          </div>`).join('')}
-        </div>
-      </div>` : ''}
-      <div class="quick-note-wrap">
-        <div class="qn-types" id="qnt-row-${s.id}">
-          <button class="qn-type-btn ${qTypes[s.id]==='mantul'?'active mantul':''}" onclick="qSetType('${s.id}','mantul',this)">🟢 Mantul</button>
-          <button class="qn-type-btn ${qTypes[s.id]==='reject'?'active reject':''}" onclick="qSetType('${s.id}','reject',this)">🔴 Reject</button>
-          <button class="qn-type-btn ${qTypes[s.id]==='note'?'active note':''}" onclick="qSetType('${s.id}','note',this)">📌 Catatan</button>
-        </div>
-        <div class="qn-row">
-          <textarea id="qnt-text-${s.id}" placeholder="Tulis catatan cepat..." onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();quickSave('${s.id}')}"></textarea>
-          <button class="btn-send" onclick="quickSave('${s.id}')">↑</button>
-        </div>
-      </div>
-      <div class="card-actions">
-        <button class="card-action-btn" onclick="openEdit('${s.id}')">✏️ Edit</button>
-        <button class="card-action-btn danger" onclick="deleteSaham('${s.id}')">🗑 Hapus</button>
-      </div>` : ''}
-    </div>`;
-  }).join('');
+      <span class="status-pill ${s.status}">${statusLabel(s.status)}</span>
+    </div>`).join('');
 }
 
-// Render Notes
-function renderNotes() {
-  const el = document.getElementById('notes-list');
+function renderSidebarNotes() {
+  const el = document.getElementById('sb-notes');
+  if (!el) return;
   if (!notes.length) {
-    el.innerHTML = `<div class="empty"><div class="empty-icon">📝</div><p>Belum ada catatan.<br>Tambah catatan dari watchlist di bawah tiap saham.</p></div>`;
+    el.innerHTML = `<div class="empty"><div class="empty-icon">📝</div><p>Belum ada catatan.</p></div>`;
     return;
   }
   el.innerHTML = notes.map(n => `
@@ -549,7 +684,6 @@ function renderNotes() {
       <div class="note-meta">
         <span class="note-ticker-tag">${n.ticker}</span>
         <span class="note-type-tag ${n.type}">${n.type==='mantul'?'🟢 Mantul':n.type==='reject'?'🔴 Reject':'📌 Catatan'}</span>
-        ${n.price ? `<span class="note-price-tag">${n.price}</span>` : ''}
         <span class="note-ts">${fmtTime(n.ts)}</span>
       </div>
       <div class="note-text">${n.text}</div>
@@ -557,9 +691,145 @@ function renderNotes() {
     </div>`).join('');
 }
 
+// ── DESKTOP: Select & Detail ──
+function selectSaham(id) {
+  selectedId = id;
+  renderSidebarWatchlist();
+  renderDetail(id);
+}
+
+function renderDetailEmpty() {
+  document.getElementById('detail-pane').innerHTML = `
+    <div class="detail-empty">
+      <div class="detail-empty-icon">👈</div>
+      <p>Pilih saham dari sidebar<br>untuk lihat detail, area kunci, dan catatan.</p>
+    </div>`;
+}
+
+function renderDetail(id) {
+  const s = sahamList.find(x => x.id === id);
+  if (!s) return;
+  if (!qTypes[s.id]) qTypes[s.id] = 'mantul';
+  document.getElementById('detail-pane').innerHTML = `
+    <div class="detail-hdr">
+      <div>
+        <div class="detail-ticker">${s.ticker}</div>
+        ${s.name?`<div class="detail-name">${s.name}</div>`:''}
+      </div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <span class="status-pill ${s.status}" style="font-size:11px;padding:4px 12px">${statusLabel(s.status)}</span>
+        <div class="detail-actions">
+          <button class="btn-sm" onclick="openEdit('${s.id}')">✏️ Edit</button>
+          <button class="btn-sm danger" onclick="deleteSaham('${s.id}')">🗑</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="detail-area-grid">
+      <div class="detail-area-cell">
+        <div class="area-label">AREA BELI</div>
+        <div class="area-val green" style="font-size:15px;margin-top:4px">${s.beli||'—'}</div>
+      </div>
+      <div class="detail-area-cell">
+        <div class="area-label">AREA JUAL / TP</div>
+        <div class="area-val red" style="font-size:15px;margin-top:4px">${s.jual||'—'}</div>
+      </div>
+      <div class="detail-area-cell">
+        <div class="area-label">SUPPORT</div>
+        <div class="area-val amber" style="font-size:15px;margin-top:4px">${s.support||'—'}</div>
+      </div>
+      <div class="detail-area-cell">
+        <div class="area-label">RESISTANCE</div>
+        <div class="area-val muted" style="font-size:15px;margin-top:4px">${s.resist||'—'}</div>
+      </div>
+    </div>
+
+    <div class="section-title">HISTORY & CATATAN</div>
+
+    ${quickNoteHTML(s.id)}
+
+    <div style="margin-top:16px" id="detail-history">
+      ${notes.filter(n=>n.sahamId===s.id).length ? `
+      <div class="history-list">
+        ${notes.filter(n=>n.sahamId===s.id).map(n=>`
+        <div class="history-item" style="padding:8px 0;border-bottom:0.5px solid var(--border)">
+          <div class="h-dot ${n.type}"></div>
+          <div class="h-content">${n.price?`<strong>${n.price}</strong> — `:''}${n.text}</div>
+          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0">
+            <span class="h-time">${fmtTime(n.ts)}</span>
+            <span onclick="deleteNote('${n.id}')" style="font-size:10px;color:var(--text3);cursor:pointer">✕</span>
+          </div>
+        </div>`).join('')}
+      </div>` : `<div style="font-size:12px;color:var(--text3);padding:16px 0">Belum ada catatan untuk saham ini.</div>`}
+    </div>`;
+}
+
+// ── MOBILE: Watchlist ──
+function renderWatchlistMobile() {
+  const el = document.getElementById('wl-list');
+  if (!el) return;
+  if (!sahamList.length) {
+    el.innerHTML = `<div class="empty"><div class="empty-icon">📋</div><p>Belum ada saham di watchlist.<br>Tap <strong>+</strong> untuk tambah saham.</p><div class="empty-hint">Catat area beli, area jual, support, resistance,<br>dan history mantul/reject tiap saham.</div></div>`;
+    return;
+  }
+  el.innerHTML = sahamList.map(s => {
+    const isOpen = expanded.has(s.id);
+    if (!qTypes[s.id]) qTypes[s.id] = 'mantul';
+    return `<div class="saham-card ${s.status}">
+      <div class="card-top" onclick="toggleCard('${s.id}')">
+        <div>
+          <div class="card-ticker">${s.ticker}</div>
+          ${s.name?`<div class="card-name">${s.name}</div>`:''}
+        </div>
+        <div class="card-right">
+          <span class="status-pill ${s.status}">${statusLabel(s.status)}</span>
+          <span class="card-chevron ${isOpen?'open':''}">▼</span>
+        </div>
+      </div>
+      ${isOpen?`
+      <div class="area-grid">
+        <div class="area-cell"><div class="area-label">AREA BELI</div><div class="area-val green">${s.beli||'—'}</div></div>
+        <div class="area-cell"><div class="area-label">AREA JUAL / TP</div><div class="area-val red">${s.jual||'—'}</div></div>
+        <div class="area-cell"><div class="area-label">SUPPORT</div><div class="area-val amber">${s.support||'—'}</div></div>
+        <div class="area-cell"><div class="area-label">RESISTANCE</div><div class="area-val muted">${s.resist||'—'}</div></div>
+      </div>
+      ${historyHTML(s.id, 6)}
+      ${quickNoteHTML(s.id)}
+      <div class="card-actions">
+        <button class="card-action-btn" onclick="openEdit('${s.id}')">✏️ Edit</button>
+        <button class="card-action-btn danger" onclick="deleteSaham('${s.id}')">🗑 Hapus</button>
+      </div>`:''}
+    </div>`;
+  }).join('');
+}
+
+function renderNotesMobile() {
+  const el = document.getElementById('notes-list');
+  if (!el) return;
+  if (!notes.length) {
+    el.innerHTML = `<div class="empty"><div class="empty-icon">📝</div><p>Belum ada catatan.</p></div>`;
+    return;
+  }
+  el.innerHTML = notes.map(n => `
+    <div class="note-entry">
+      <div class="note-meta">
+        <span class="note-ticker-tag">${n.ticker}</span>
+        <span class="note-type-tag ${n.type}">${n.type==='mantul'?'🟢 Mantul':n.type==='reject'?'🔴 Reject':'📌 Catatan'}</span>
+        <span class="note-ts">${fmtTime(n.ts)}</span>
+      </div>
+      <div class="note-text">${n.text}</div>
+      <span class="note-del" onclick="deleteNote('${n.id}')">✕ hapus</span>
+    </div>`).join('');
+}
+
+function renderAll() {
+  renderSidebarWatchlist();
+  renderWatchlistMobile();
+}
+
 // Init
 renderIHSG();
-renderWatchlist();
+renderAll();
 </script>
 </body>
 </html>
